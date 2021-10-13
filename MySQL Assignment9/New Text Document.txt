@@ -1,0 +1,99 @@
+
+use frozenfood;
+
+/*-------------------------------------------*/
+
+CREATE VIEW productSupplierDetail AS
+SELECT p.description AS Product, s.supplierName AS Supplier
+FROM product p, supplier s, productSupplier ps
+WHERE ps.supplierId = s.id
+AND ps.productId = p.id
+ORDER BY s.supplierName;
+
+/*-------------------------------------------*/
+
+CREATE VIEW customerOrderDetail AS
+SELECT concat(c.firstName, " ", c.lastName) AS Customer, p.description AS Product,
+co.quantity AS Quantity, co.orderDate AS "Date Ordered", o.state AS "Order Status"
+FROM customerOrder co, product p, customer c, orderState o
+WHERE co.customerId = c.id
+AND co.productId = p.id
+AND co.OrderStateId = o.id;
+
+/*-------------------------------------------*/
+
+CREATE VIEW purchaseOrderDetail AS
+SELECT s.supplierName AS supplier, p.description AS Product, po.quantity AS Quantity,
+po.OrderDate AS "Date Ordered", o.state AS OrderStatus
+FROM product p, supplier s, purchaseOrder po, orderState o
+WHERE po.supplierId = s.id
+AND po.productId = p.id
+AND po.orderStateId = o.id;
+
+/*-------------------------------------------*/
+
+CREATE VIEW customerPaymentDetail AS
+SELECT concat(c.firstName, " ", c.lastName) AS Customer, cp.customerOrderId AS "Customer Order",
+p.description AS Product, co.total AS "Product Total"
+FROM product p, customer c, customerOrder co, customerpayment cp
+WHERE co.customerId = c.id
+AND co.productId = p.id
+AND co.id = cp.customerOrderid
+ORDER BY c.lastName;
+
+/*-------------------------------------------*/
+
+CREATE VIEW supplierTransactionDetail AS
+SELECT s.supplierName AS Supplier, st.purchaseOrderId AS "Purchase Order", p.description AS Product,
+po.total AS "Product Total"
+FROM supplierTransaction st, purchaseorder po, supplier s, product p
+WHERE st.purchaseOrderId = po.id
+AND po.supplierId = s.id
+AND po.productId = p.id
+ORDER BY s.supplierName;
+
+/*-------------------------------------------*/
+
+CREATE VIEW productDetail AS
+SELECT p.id AS "Product ID", p.productName AS "Product Name", pt.type AS Category,
+p.description AS Description, concat(p.size, " ", st.size) AS size, p.quantity AS "In Stock",
+concat("$", p.price) AS cost
+FROM product p, productType pt, sizeType st
+WHERE p.productType = pt.id
+AND p.sizeTypeId = st.id
+ORDER BY p.productName;
+
+/*-------------------------------------------*/
+
+CREATE VIEW employeeSupplierDetail AS
+SELECT concat(e.firstName, ' ', e.lastName) AS 'Representative', s.supplierName AS 'Supplier'
+FROM employee e, supplier s, employeeSupplier es
+WHERE e.ID = es.employeeId AND s.ID = es.supplierId
+ORDER BY e.lastName;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

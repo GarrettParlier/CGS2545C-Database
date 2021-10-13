@@ -1,0 +1,91 @@
+use frozenfood;
+
+/*-------------------------------------------------*/
+
+CREATE TABLE orderState(
+ID INT (7)          NOT NULL auto_increment,
+state VARCHAR (20)  NOT NULL,
+PRIMARY KEY (ID)
+);
+
+/*-------------------------------------------------*/
+
+CREATE TABLE customerOrder(
+ID INT (7) NOT NULL auto_increment,
+customerId INT (7)  NOT NULL,
+productId INT (7) NOT NULL,
+quantity INT (7) NOT NULL,
+orderDate DATE NOT NULL,
+orderStateId INT (7) NOT NULL,
+CHECK (quantity>0),
+PRIMARY KEY (ID),
+FOREIGN KEY(customerId) REFERENCES customer(ID),
+FOREIGN KEY(productId) REFERENCES product(ID),
+FOREIGN KEY(orderStateId) REFERENCES orderState(ID)
+);
+
+/*-------------------------------------------------*/
+
+CREATE TABLE purchaseOrder(
+ID INT (7) NOT NULL auto_increment,
+supplierId INT (7) NOT NULL,
+productId INT (7) NOT NULL,
+quantity INT (7) NOT NULL,
+orderDate DATE NOT NULL,
+orderStateId INT (7) NOT NULL,
+CHECK (quantity>0),
+PRIMARY KEY (ID),
+FOREIGN KEY(supplierId) REFERENCES supplier(ID),
+FOREIGN KEY(productId) REFERENCES product(ID),
+FOREIGN KEY(orderStateId) REFERENCES orderState(ID)
+);
+
+/*-------------------------------------------------*/
+
+CREATE TABLE customerPayment(
+ID INT (7) NOT NULL auto_increment,
+customerOrderId INT (7) NOT NULL,
+total DECIMAL (10, 2) NOT NULL,
+CHECK (total>0.0),
+PRIMARY KEY (ID),
+FOREIGN KEY(customerOrderId) REFERENCES customerOrder(ID)
+);
+
+/*-------------------------------------------------*/
+
+CREATE TABLE supplierTransaction(
+ID INT (7) NOT NULL auto_increment,
+purchaseOrderId INT (7) NOT NULL,
+total DECIMAL (10, 2) NOT NULL,
+CHECK (total>0.0),
+PRIMARY KEY (ID),
+FOREIGN KEY(purchaseOrderId) REFERENCES purchaseOrder(ID)
+);
+
+/*-------------------------------------------------*/
+
+INSERT INTO orderState(state) VALUES
+
+("New order"),
+("Buyer contacted"),
+("Seller contacted"),
+("Invoice sent"),
+("Invoice received"),
+("Payment pending"),
+("Payment received"),
+("Shipped"),
+("Awaiting pickup"),
+("Cancelled"),
+("Backordered"),
+("Completed");
+
+
+
+
+
+
+
+
+
+
+
